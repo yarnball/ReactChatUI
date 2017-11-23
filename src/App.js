@@ -4,6 +4,7 @@ import { questions } from './Data'
 class App extends React.Component {
   state = {
     currentAns: '',
+    isTyping: false,
     messages: [
           {type:'q', text: 'Want me to speak latin?'},
     ]
@@ -19,18 +20,19 @@ class App extends React.Component {
   }
 
   getNext = () =>{
+     this.setState({ isTyping: true })
     const { messages } = this.state
     const randomNum = Math.floor((Math.random() * 100) + 1)
     const randomQ = questions.filter(e=> e.id === randomNum).pop()
     const q = {type:'q', text:randomQ.text}
     const randomWait = Math.floor((Math.random() * 2200) + 100)
     setTimeout(() => {
-        this.setState({ messages:  [...messages, q] })
+        this.setState({ isTyping: false, messages:  [...messages, q] })
       }, randomWait)
   }
 
   render() {
-    const { messages, currentAns } = this.state
+    const { messages, currentAns, isTyping } = this.state
     return (
       <div>
           {messages.map((x, indx) => {
@@ -41,6 +43,7 @@ class App extends React.Component {
               </div>
             );
           })}
+                        {isTyping && <div style={{textAlign:'left'}} > . . .<br /><br /></div>}
           <form onSubmit={this.send}><input onChange={this.onChange} value={currentAns} type="text" /></form>
       </div>
     )
