@@ -5,16 +5,17 @@ class App extends React.Component {
   state = {
     currentAns: '',
     messages: [
-          {type:'q', text: 'yiiew'},
+          {type:'q', text: 'Want me to speak latin?'},
     ]
   }
   onChange = (e) =>{
     this.setState({ currentAns: e.target.value  })
   }
-  send = () =>{
+  send = e =>{
+    e.preventDefault()
     const { currentAns, messages } = this.state
     const ans = {type: 'a', text: currentAns}
-    this.setState({ messages: [...messages, ans] }, () => this.getNext() )
+    this.setState({ currentAns:'', messages: [...messages, ans] }, () => this.getNext() )
   }
 
   getNext = () =>{
@@ -22,14 +23,14 @@ class App extends React.Component {
     const randomNum = Math.floor((Math.random() * 100) + 1)
     const randomQ = questions.filter(e=> e.id === randomNum).pop()
     const q = {type:'q', text:randomQ.text}
-    const randomWait = Math.floor((Math.random() * 3000) + 100)
+    const randomWait = Math.floor((Math.random() * 2200) + 100)
     setTimeout(() => {
         this.setState({ messages:  [...messages, q] })
       }, randomWait)
   }
 
   render() {
-    const { messages } = this.state
+    const { messages, currentAns } = this.state
     return (
       <div>
           {messages.map((x, indx) => {
@@ -40,8 +41,7 @@ class App extends React.Component {
               </div>
             );
           })}
-          <input onChange={this.onChange} type="text" />
-          <button onClick={this.send}> go </button>
+          <form onSubmit={this.send}><input onChange={this.onChange} value={currentAns} type="text" /></form>
       </div>
     )
   }
