@@ -1,12 +1,12 @@
 import React from 'react'
-import { questions } from './Data'
+import { randomLatin, randomWiki } from './Query/GetQuestions'
 
 class App extends React.Component {
   state = {
     currentAns: '',
     isTyping: false,
     messages: [
-          {type:'q', text: 'Want me to speak latin?'},
+          {type:'q', text: 'What ingredients do you have?'},
     ]
   }
   onChange = (e) =>{
@@ -16,18 +16,23 @@ class App extends React.Component {
     e.preventDefault()
     const { currentAns, messages } = this.state
     const ans = {type: 'a', text: currentAns}
-    this.setState({ currentAns:'', messages: [...messages, ans] }, () => this.getNext() )
+    this.setState({ isTyping: true })
+    this.setState({ currentAns:'', messages: [...messages, ans] }, 
+      () => this.getNext(currentAns)
+    )
   }
 
-  getNext = () =>{
-     this.setState({ isTyping: true })
+  getNext = currentAns =>{
     const { messages } = this.state
-    const randomNum = Math.floor((Math.random() * 100) + 1)
-    const randomQ = questions.filter(e=> e.id === randomNum).pop()
-    const q = {type:'q', text:randomQ.text}
+    let nextQ = {}
+    nextQ = randomLatin(currentAns)
+    // ONLY use this on promise- it waits for the endpoint to resolve
+    // randomWiki(currentAns).then((res) => {
+    //   nextQ = res
+    // })
     const randomWait = Math.floor((Math.random() * 2200) + 100)
     setTimeout(() => {
-        this.setState({ isTyping: false, messages:  [...messages, q] })
+        this.setState({ isTyping: false, messages:  [...messages, nextQ] })
       }, randomWait)
   }
 
@@ -43,7 +48,7 @@ class App extends React.Component {
               </div>
             );
           })}
-                        {isTyping && <div style={{textAlign:'left'}} > . . .<br /><br /></div>}
+          {isTyping && <div style={{textAlign:'left'}} > . . .<br /><br /></div>}
           <form onSubmit={this.send}><input onChange={this.onChange} value={currentAns} type="text" /></form>
       </div>
     )
