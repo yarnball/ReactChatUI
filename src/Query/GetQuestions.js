@@ -1,27 +1,29 @@
 import { questions } from './Data'
 
-export const foodChoice = e =>{
-// let food = {};
-    return fetch('https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q39246&format=json', {
-        mode: 'no-cors',
-        headers:{
-'Access-Control-Allow-Origin':'*',
-},
-        // headers:{
-        // 'Access-Control-Allow-Origin':'*',
-        // "Content-Type": "text/json"
-        // },
-        }
+export const carChoose = e =>{
+  const origQ = e
+    return fetch('https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/' + e + '?format=json',
       )
       .then((response) => {
         if(response.ok) {
-            return response.json();
+            return response.json()
         } else {
             throw new Error('Server response wasn\'t OK');
         }
       })
       .then((json) => {
-        return json.results[0]
+        if (json.Count > 0) {
+          const RandomNum = Math.floor(Math.random() * json.Count-1) + 1
+          // Gets the total count of items, picks a random number
+          console.log('all res', RandomNum)
+          return json.Results[RandomNum].Model_Name
+        }
+        else {
+          return origQ + `? Are you sure thats a car?`
+        }
+        
+        
+        
       })
 }
 

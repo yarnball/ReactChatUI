@@ -1,12 +1,15 @@
 import React from 'react'
-import { randomLatin, randomWiki } from './Query/GetQuestions'
+import { 
+  // randomLatin, 
+  carChoose 
+} from './Query/GetQuestions'
 
 class App extends React.Component {
   state = {
     currentAns: '',
     isTyping: false,
     messages: [
-          {type:'q', text: 'What ingredients do you have?'},
+          {type:'q', text: 'Tell me a car band, I will tell you a model'},
     ]
   }
   onChange = (e) =>{
@@ -25,19 +28,24 @@ class App extends React.Component {
   getNext = currentAns =>{
     const { messages } = this.state
     let nextQ = {}
-    nextQ = randomLatin(currentAns)
+    // nextQ = foodChoice(currentAns)
+    // console.log("nex", nextQ)
     // ONLY use this on promise- it waits for the endpoint to resolve
-    // randomWiki(currentAns).then((res) => {
-    //   nextQ = res
-    // })
-    const randomWait = Math.floor((Math.random() * 2200) + 100)
-    setTimeout(() => {
-        this.setState({ isTyping: false, messages:  [...messages, nextQ] })
-      }, randomWait)
+    carChoose(currentAns)
+    .then((res) => {
+      nextQ = {type: 'q', text: res}
+    })
+    .then(() => this.setState({ isTyping: false, messages:  [...messages, nextQ] }))
+    // const randomWait = Math.floor((Math.random() * 2200) + 100)
+    // setTimeout(() => {
+    //     this.setState({ isTyping: false, messages:  [...messages, nextQ] }),
+    //     console.log('ne', nextQ)
+    //   }, randomWait)
   }
 
   render() {
     const { messages, currentAns, isTyping } = this.state
+    console.log('messages', messages)
     return (
       <div>
           {messages.map((x, indx) => {
