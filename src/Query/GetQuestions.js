@@ -2,7 +2,8 @@ import { questions } from './Data'
 
 export const carChoose = e =>{
   const origQ = e
-    return fetch('https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/' + e.replace(/\W+/g, " ") + '?format=json',
+    return fetch('https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/' + e.replace(/[^\w\s]|_/g, "").replace(/\W+/g, " ") + '?format=json',
+      // the replace removes all punctuation and spaces
       )
       .then((response) => {
         if(response.ok) {
