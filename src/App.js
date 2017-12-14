@@ -59,8 +59,10 @@ class App extends React.Component {
               </span>
             );
           })}
+          
+          {isTyping && <div className="message from" > . . . </div>}
           </div>
-          {isTyping && <div style={{textAlign:'left'}} > . . .<br /><br /></div>}
+
           <form onSubmit={this.send}><input onChange={this.onChange} value={currentAns} type="text" /></form>
       </div>
     )
