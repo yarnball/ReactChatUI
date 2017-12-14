@@ -3,6 +3,7 @@ import {
   // randomLatin, 
   carChoose 
 } from './Query/GetQuestions'
+import './App.css'
 
 class App extends React.Component {
   state = {
@@ -48,14 +49,17 @@ class App extends React.Component {
     console.log('messages', messages)
     return (
       <div>
+      <header><span className="left">Messages</span><b style={{color:'black'}}>CarSelect</b><span className="right">Contact</span></header>
+<div className="messages-wrapper">
           {messages.map((x, indx) => {
             return (
-              <div key={indx}>
-              {x.type === 'q' && <div style={{textAlign:'left'}} > {x.text}<br /><br /></div>}
-              {x.type === 'a' && <div style={{textAlign:'right'}} > {x.text}<br /><br /></div>}
-              </div>
+              <span  key={indx}>
+              {x.type === 'q' && <div className="message from" > {x.text}</div>}
+              {x.type === 'a' && <div className="message to" > {x.text} </div>}
+              </span>
             );
           })}
+          </div>
           {isTyping && <div style={{textAlign:'left'}} > . . .<br /><br /></div>}
           <form onSubmit={this.send}><input onChange={this.onChange} value={currentAns} type="text" /></form>
       </div>
