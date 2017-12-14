@@ -50,7 +50,7 @@ class App extends React.Component {
     return (
       <div>
       <header><span className="left">Messages</span><b style={{color:'black'}}>CarSelect</b><span className="right">Contact</span></header>
-<div className="messages-wrapper">
+        <div className="messages-wrapper">
           {messages.map((x, indx) => {
             return (
               <span  key={indx}>

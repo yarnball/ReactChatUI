@@ -2,7 +2,7 @@ import { questions } from './Data'
 
 export const carChoose = e =>{
   const origQ = e
-    return fetch('https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/' + e + '?format=json',
+    return fetch('https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/' + e.replace(/\W+/g, " ") + '?format=json',
       )
       .then((response) => {
         if(response.ok) {
