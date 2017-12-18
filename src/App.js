@@ -13,6 +13,18 @@ class App extends React.Component {
           {type:'q', text: 'Tell me a car band, I will tell you a model'},
     ]
   }
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+    // dummy div created
+  }
+
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
   onChange = (e) =>{
     this.setState({ currentAns: e.target.value  })
   }
@@ -50,12 +62,15 @@ class App extends React.Component {
     return (
       <div>
       <header><span className="left">Messages</span><b style={{color:'black'}}>CarSelect</b><span className="right">Contact</span></header>
-        <div className="messages-wrapper">
+<div className="messages-wrapper">
           {messages.map((x, indx) => {
             return (
-              <span  key={indx}>
+              <span className="messageBody" key={indx}>
               {x.type === 'q' && <div className="message from" > {x.text}</div>}
               {x.type === 'a' && <div className="message to" > {x.text} </div>}
+
+              <div style={{ float:"left", clear: "both" }} ref={(el) => { this.messagesEnd = el; }}></div>
+              
               </span>
             );
           })}
