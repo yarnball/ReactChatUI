@@ -4,6 +4,8 @@ import {
   carChoose 
 } from './Query/GetQuestions'
 import './App.css'
+import jsonLogic from 'json-logic-js'
+import dotty from 'dotty'
 
 class App extends React.Component {
   state = {
@@ -12,6 +14,19 @@ class App extends React.Component {
     messages: [
           {type:'q', text: 'Tell me a car band, I will tell you a model'},
     ]
+  }
+  testPost = (e) =>{
+    return fetch(
+          // post deleted item to archive DB
+           'http://localhost:3005/quotes', {
+           method: 'POST',
+           // mode: 'no-cors',
+           headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+           },
+           body: JSON.stringify({test:'genius'})
+           }).catch((err) => console.error(err)).then(() => console.log('allG'))
   }
   scrollToBottom = () => {
     this.messagesEnd.scrollIntoView({ behavior: "smooth" });
@@ -55,10 +70,25 @@ class App extends React.Component {
     //     console.log('ne', nextQ)
     //   }, randomWait)
   }
+  testLogic = () => {
+    const cakeData = [{ "temp" : 100, "pies" : [{ "filling" : "apple","score":12 }, { "filling" : "cherry","score":12 }]}, { "temp" : 90, "pies" : [{ "filling" : "lemon","score":12 }, { "filling" : "orange","score":12 }]}]
+    return cakeData.map((itm, indx) => {
+       jsonLogic.add_operation('var_search', function(key){
+          return dotty.search(this, key); //In custom operations "this" is bound to data
+       });
+       var rules = { "and" : [
+          {"<" : [ { "var" : "temp" }, 110 ]},
+          {"in" : ["cherry", { "var_search" : "pies.*.filling" } ] },
+          // {"in" : [10, { ">" : "pies.*.score" } ]}
+        ] };
+        return jsonLogic.apply(rules, itm) ? itm : null;
+    })
+  }
 
   render() {
     const { messages, currentAns, isTyping } = this.state
-    console.log('messages', messages)
+    console.log('logic', this.testLogic())
+
     return (
       <div>
       <header><span className="left">Messages</span><b style={{color:'black'}}>CarSelect</b><span className="right">Contact</span></header>
@@ -74,7 +104,7 @@ class App extends React.Component {
               </span>
             );
           })}
-          
+          <button onClick={this.testPost}> test</button>
           {isTyping && <div className="message from" > . . . </div>}
           </div>
 
